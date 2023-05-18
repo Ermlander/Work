@@ -26,3 +26,11 @@ months_below_95 = df.groupby("Nazwa użytkownika")["Wynik w procentach"].apply(
 df["Miesiąc z rzędu poniżej 95%"] = months_below_95.groupby(df["Nazwa użytkownika"]).apply(
     lambda x: x.groupby((x != x.shift()).cumsum()).cumsum()
 )
+
+
+#########
+
+
+df["Liczba kolejnych miesięcy poniżej 95%"] = df.groupby("Pracownik")["Wynik"].apply(
+    lambda x: (x < 0.95).cumsum().mask(x >= 0.95, 0)
+)
