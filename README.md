@@ -73,3 +73,54 @@ body = msg.Body
 
 # Wysłanie e-maila z danymi ze szablonu
 send_email(subject, body, recipients)
+
+
+
+
+
+###############
+
+
+import win32com.client as win32
+import os
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+
+def send_email(subject, body, recipients, attachments=None):
+    outlook = win32.Dispatch('Outlook.Application')
+    mail = outlook.CreateItem(0)
+    mail.Subject = subject
+    mail.To = ";".join(recipients)
+    
+    if attachments:
+        for attachment in attachments:
+            mail.Attachments.Add(attachment)
+    
+    mail.HTMLBody = body
+    mail.Send()
+
+# Ścieżka do pliku .msg
+msg_path = 'ścieżka/do/pliku.msg'
+
+# Odbiorcy e-maila
+recipients = ['adres1@example.com', 'adres2@example.com']
+
+# Wczytanie pliku .msg jako szablon
+outlook = win32.Dispatch('Outlook.Application')
+namespace = outlook.GetNamespace("MAPI")
+msg = namespace.OpenSharedItem(msg_path)
+
+# Pobranie tematu i treści ze szablonu
+subject = msg.Subject
+html_body = msg.HTMLBody
+
+# Pobranie obrazków z HTML i zapisanie ich jako załączniki tymczasowe
+image_attachments = []
+for cid in msg.HTMLBody:
+    attachment = msg.Attachments.Add(os.path.join(os.getcwd(), 'temp_image.png'))
+    attachment.PropertyAccessor.SetProperty("http://schemas.microsoft.com/mapi/proptag/0x3712001F", cid)
+    image_attachments.append(attachment)
+
+# Wysłanie e-maila z danymi ze szablonu
+send_email(subject, html_body, recipients, image_attachments)
