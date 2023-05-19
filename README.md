@@ -34,3 +34,42 @@ df["Miesiąc z rzędu poniżej 95%"] = months_below_95.groupby(df["Nazwa użytko
 df["Liczba kolejnych miesięcy poniżej 95%"] = df.groupby("Pracownik")["Wynik"].apply(
     lambda x: (x < 0.95).cumsum().mask(x >= 0.95, 0)
 )
+
+
+
+############3
+
+
+
+import win32com.client as win32
+
+def send_email(subject, body, recipients, attachments=None):
+    outlook = win32.Dispatch('Outlook.Application')
+    mail = outlook.CreateItem(0)
+    mail.Subject = subject
+    mail.Body = body
+    mail.To = ";".join(recipients)
+    
+    if attachments:
+        for attachment in attachments:
+            mail.Attachments.Add(attachment)
+    
+    mail.Send()
+
+# Ścieżka do pliku .msg
+msg_path = 'ścieżka/do/pliku.msg'
+
+# Odbiorcy e-maila
+recipients = ['adres1@example.com', 'adres2@example.com']
+
+# Wczytanie pliku .msg jako szablon
+outlook = win32.Dispatch('Outlook.Application')
+namespace = outlook.GetNamespace("MAPI")
+msg = namespace.OpenSharedItem(msg_path)
+
+# Pobranie danych z szablonu
+subject = msg.Subject
+body = msg.Body
+
+# Wysłanie e-maila z danymi ze szablonu
+send_email(subject, body, recipients)
