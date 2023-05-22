@@ -272,3 +272,66 @@ html_body = str(soup)
 
 # Wysłanie e-maila z danymi ze szablonu
 send_email(subject, html_body, recipients)
+
+
+
+
+
+################
+
+
+import win32com.client as win32
+import os
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from bs4 import BeautifulSoup
+import base64
+
+def send_email(subject, body, recipients):
+    outlook = win32.Dispatch('Outlook.Application')
+    mail = outlook.CreateItem(0)
+    mail.Subject = subject
+    mail.To = ";".join(recipients)
+    mail.HTMLBody = body
+    mail.Send()
+
+# Ścieżka do pliku .msg
+msg_path = 'ścieżka/do/pliku.msg'
+
+# Odbiorcy e-maila
+recipients = ['adres1@example.com', 'adres2@example.com']
+
+# Wczytanie pliku .msg jako szablon
+outlook = win32.Dispatch('Outlook.Application')
+namespace = outlook.GetNamespace("MAPI")
+msg_template = namespace.OpenSharedItem(msg_path)
+
+# Pobranie tematu i treści ze szablonu
+subject = msg_template.Subject
+html_body = msg_template.HTMLBody
+
+# Pobranie załączonych obrazków
+attachments = msg_template.Attachments
+image_tags = BeautifulSoup(html_body, 'html.parser').find_all('img')
+
+# Zamiana załączonych obrazków na osadzone obrazy w HTML
+for image_tag in image_tags:
+    attachment_name = image_tag['src']
+    attachment = attachments.Item(attachment_name)
+    
+    # Pobranie danych obrazka
+    image_data = attachment.PropertyAccessor.BinaryToString(attachment.PropertyAccessor.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x7FFF001E"))
+    image_type = attachment.PropertyAccessor.GetProperty("http://schemas.microsoft.com/mapi/proptag/0x7FFF001F")
+    
+    # Konwersja danych obrazka do kodu Base64
+    encoded_image_data = base64.b64encode(image_data).decode('utf-8')
+    
+    # Utworzenie osadzonego obrazka w HTML
+    image_tag['src'] = f"data:{image_type};base64,{encoded_image_data}"
+    image_tag['alt'] = attachment_name
+
+# Wysłanie e-maila
+send_email(subject, str(html_body), recipients)
+
+# Zamknięcie szablonu
+msg_template.Close(0)
