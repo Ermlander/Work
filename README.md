@@ -335,3 +335,8 @@ send_email(subject, str(html_body), recipients)
 
 # Zamknięcie szablonu
 msg_template.Close(0)
+
+
+
+
+df2["Zawiera_wzorzec"] = df2["Tekst"].str.extract('(' + '|'.join(df1["Wzorzec"]) + ')', expand=False)
