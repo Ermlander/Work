@@ -1,3 +1,5 @@
+df2["Zawiera_wzorzec"] = df2["Tekst"].apply(lambda x: next((wzorzec for wzorzec in df1["Wzorzec"] if wzorzec in x), None))
+
 
 df2["Zawiera_wzorzec"] = df2["Tekst"].str.extract(f'({pattern})', flags=re.IGNORECASE, expand=False)
 
