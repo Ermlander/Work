@@ -1,4 +1,6 @@
 
+df2["Zawiera_wzorzec"] = df2["Tekst"].str.extract(f'({pattern})', flags=re.IGNORECASE, expand=False)
+
 for real_name in df2['realName'].to_list():
   df1.loc[ df1['userName'].str.contains(real_name), 'userName' ] = real_name
 
