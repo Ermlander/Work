@@ -1,3 +1,9 @@
+
+
+pattern = '|'.join(df1["Wzorzec"])
+df2["Zawiera_wzorzec"] = df2["Tekst"].str.extract(f'({pattern})', expand=False)
+
+
 import pandas as pd
 
 # Konwertowanie listy tabela na DataFrame
