@@ -487,3 +487,20 @@ RETURN
     
 df['result'] = df.apply(lambda row: 'xyz' if row['a'] == row['b'] else ('xcv' if row['c'] == 0 and row['d'] == 1 and row['a'] <= 40 else None), axis=1)
 
+
+
+# Przykładowy DataFrame
+data = {'a': [35, 40, 45, 50, 30],
+        'b': [35, 42, 45, 50, 25],
+        'c': [0, 1, 0, 1, 0],
+        'd': [1, 0, 1, 0, 1]}
+df = pd.DataFrame(data)
+
+# Tworzymy nową kolumnę 'result' zgodnie z twoimi warunkami
+df['result'] = df.apply(lambda row: 'xyz' if row['a'] == row['b'] else 
+                          ('xcv' if row['c'] == 0 and row['d'] == 1 and row['a'] <= 40 else
+                            ('abc' if row['c'] == 1 and row['d'] == 0 and row['a'] > 40 else 
+                             ('pqr' if row['c'] == 0 and row['d'] == 0 and row['b'] > 40 else None))), axis=1)
+
+print(df)
+
