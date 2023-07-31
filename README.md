@@ -35,6 +35,11 @@ print(df)
 
 months_below_95 = df.groupby("Nazwa użytkownika")["Wynik w procentach"].apply(
     lambda x: (x < 95).cumsum().where(x < 95, 0)
+
+
+
+
+    df['result'] = df.apply(lambda row: 'xyz' if row['a'] == row['b'] else ('xcv' if row['c'] == 0 and row['d'] == 1 and row['a'] <= 40 else None), axis=1)
 )
 
 df["Miesiąc z rzędu poniżej 95%"] = months_below_95.groupby(df["Nazwa użytkownika"]).apply(
