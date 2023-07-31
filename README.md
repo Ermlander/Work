@@ -356,7 +356,7 @@ msg_template.Close(0)
 df2["Zawiera_wzorzec"] = df2["Tekst"].str.extract('(' + '|'.join(df1["Wzorzec"]) + ')', expand=False)
 
 
-
+444444
 
 
 
@@ -399,5 +399,50 @@ Opis działania funkcji:
 
     Tworzymy zmienną CalendarTable, która jest tabelą kalendarza zawierającą wszystkie daty od najwcześniejszej do najpóźniejszej daty w kolumnie "Data".
     Tworzymy zmienną ConsecutiveMonthsCount, która bę
+
+ConsecutiveMonths = 
+VAR CalendarTable = 
+    ADDCOLUMNS (
+        CALENDAR ( MIN('NazwaTabeli'[Data]), MAX('NazwaTabeli'[Data]) ),
+        "MonthYear", FORMAT ( [Date], "YYYY-MM" )
+    )
+VAR ConsecutiveMonthsCount = 
+    MAXX (
+        FILTER (
+            CalendarTable,
+            NOT (
+                ISBLANK (
+                    CALCULATE (
+                        MAX ( 'NazwaTabeli'[Data] ),
+                        FILTER ( 'NazwaTabeli', 'NazwaTabeli'[Data] = EARLIER ( [Date] ) )
+                    )
+                )
+            )
+            &&
+            NOT (
+                ISBLANK (
+                    CALCULATE (
+                        MAX ( 'NazwaTabeli'[Data] ),
+                        FILTER ( 'NazwaTabeli', 'NazwaTabeli'[Data] = EDATE ( EARLIER ( [Date] ), -1 ) )
+                    )
+                )
+            )
+        ),
+        [MonthYear]
+    )
+RETURN
+    ConsecutiveMonthsCount
+
+W powyższym kodzie, zastąp 'NazwaTabeli' odpowiednią nazwą twojej tabeli.
+
+Opis działania funkcji:
+
+    Tworzymy zmienną CalendarTable, która jest tabelą kalendarza zawierającą wszystkie daty od najwcześniejszej do najpóźniejszej daty w kolumnie "Data".
+    Tworzymy zmienną ConsecutiveMonthsCount, która bę
+
+
+
+
+    
 
 
