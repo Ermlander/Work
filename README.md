@@ -442,6 +442,42 @@ Opis działania funkcji:
 
 
 
+4444234
+
+
+
+ConsecutiveMonthsCount = 
+VAR CalendarTable = 
+    ADDCOLUMNS (
+        CALENDAR ( MIN('NazwaTabeli'[Data]), MAX('NazwaTabeli'[Data]) ),
+        "MonthYear", FORMAT ( [Date], "YYYY-MM" )
+    )
+VAR ConsecutiveMonthsGroup =
+    ADDCOLUMNS (
+        CalendarTable,
+        "PreviousMonth",
+        CALCULATE (
+            MAX ( 'NazwaTabeli'[Data] ),
+            FILTER ( 'NazwaTabeli', 'NazwaTabeli'[Data] < EARLIER ( [Date] ) )
+        )
+    )
+VAR ConsecutiveMonthsCount =
+    COUNTROWS (
+        FILTER (
+            SUMMARIZE (
+                ConsecutiveMonthsGroup,
+                [MonthYear],
+                "PreviousMonth",
+                [PreviousMonth]
+            ),
+            [MonthYear] = [PreviousMonth]
+        )
+    )
+RETURN
+    ConsecutiveMonthsCount
+
+
+
 
     
 
