@@ -504,3 +504,4 @@ df['result'] = df.apply(lambda row: 'xyz' if row['a'] == row['b'] else
 
 print(df)
 
+df_sentences['found_words'] = df_sentences['sentences'].apply(lambda x: ', '.join([word for word in df_words['words'] if word in x]))
