@@ -485,5 +485,5 @@ RETURN
 
 
     
-
+df['result'] = df.apply(lambda row: 'xyz' if row['a'] == row['b'] else ('xcv' if row['c'] == 0 and row['d'] == 1 and row['a'] <= 40 else None), axis=1)
 
