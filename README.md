@@ -526,3 +526,26 @@ VAR PreviousRowResult =
 RETURN
     IF('TableName'[wynik] = "Below" && (ISBLANK(PreviousRowResult) || PreviousRowResult = "Below"), 1, 0)
 
+
+
+
+
+
+
+    #####
+
+
+
+    SumBelowWithPrevious :=
+VAR PreviousRowResult =
+    CALCULATE(
+        SUM('TableName'[wynik]),
+        FILTER(
+            ALL('TableName'),
+            'TableName'[User] = EARLIER('TableName'[User]) &&
+            'TableName'[miesiąc] < EARLIER('TableName'[miesiąc])
+        )
+    )
+RETURN
+    IF('TableName'[wynik] = "Below", 'TableName'[wynik] + IF(ISBLANK(PreviousRowResult), 0, PreviousRowResult), 0)
+
