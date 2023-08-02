@@ -509,3 +509,20 @@ df_sentences['found_words'] = df_sentences['sentences'].apply(lambda x: ', '.joi
 
 
 .replace(['[', ']'], '', regex=True)
+
+
+######
+
+MonthsBelow :=
+VAR PreviousRowResult =
+    CALCULATE(
+        FIRSTNONBLANK('TableName'[wynik], 1),
+        FILTER(
+            ALL('TableName'),
+            'TableName'[User] = EARLIER('TableName'[User]) &&
+            'TableName'[miesiąc] < EARLIER('TableName'[miesiąc])
+        )
+    )
+RETURN
+    IF('TableName'[wynik] = "Below" && (ISBLANK(PreviousRowResult) || PreviousRowResult = "Below"), 1, 0)
+
