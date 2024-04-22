@@ -587,3 +587,18 @@ df.loc[df['Id_main'] == id_main, 'input'] = selected_record[column_name].values[
 df.loc[df['Id_main'] == id_main, 'output'] = selected_record[column_name.replace('input', 'output')].values[0]
 
 print(df)
+
+
+
+
+def fill_data(row):
+    id_main = row['Id_main']
+    match_no = row['Match No']
+    id_step = row['Id_step']
+    column_name = f"{id_step.split()[0]} {id_step.split()[1]} input"
+    row['Input'] = df2.loc[(df2['Id_main'] == id_main) & (df2['Match No'] == match_no), column_name].values[0]
+    row['Output'] = df2.loc[(df2['Id_main'] == id_main) & (df2['Match No'] == match_no), column_name.replace('input', 'output')].values[0]
+    return row
+
+# Uzupełnienie danych w ramce danych 'data'
+df = df.apply(fill_data, axis=1)
