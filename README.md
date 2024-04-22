@@ -621,3 +621,8 @@ def fill_output(row):
 
 # Uzupełnienie danych w ramce danych 'data' dla kolumny "Output"
 df = df.apply(fill_output, axis=1)
+
+
+################
+
+column_name = f"{parts[0]} {parts[-2]} {parts[-1]} Output"
