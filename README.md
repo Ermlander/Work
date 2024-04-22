@@ -549,3 +549,41 @@ VAR PreviousRowResult =
 RETURN
     IF('TableName'[wynik] = "Below", 'TableName'[wynik] + IF(ISBLANK(PreviousRowResult), 0, PreviousRowResult), 0)
 
+
+
+
+import pandas as pd
+
+# Dane wejściowe
+data = {'Id_main': [123, 123, 123, 456, 456, 789],
+        'Id_step': ['L1 1st', 'L1 2nd', 'L1 st', 'L2 1st', 'L2 2nd']}
+
+data2 = {'Id_main': [123, 123, 123, 456, 456, 789],
+         'L1 1st input': [222, 2223, 333, 2, 13],
+         'L1 1st output': [222, 2223, 333, 2, 13],
+         'L1 2nd input': [222, 2223, 333, 2, 13],
+         'L1 2nd output': [222, 2223, 333, 2, 13]}
+
+# Tworzenie ramki danych
+df = pd.DataFrame(data)
+df2 = pd.DataFrame(data2)
+
+# Dodanie dwóch pustych kolumn do ramki danych "data"
+df['input'] = ''
+df['output'] = ''
+
+# Wybór rekordu z data2 na podstawie wartości Id_main i kawałka nazwy Id_step
+id_main = 123
+id_step_part = 'L1 1st'
+
+# Konstrukcja nazwy kolumny na podstawie Id_step
+column_name = f"{id_step_part} input"
+
+# Wybór rekordu na podstawie Id_main i kolumny
+selected_record = df2.loc[df2['Id_main'] == id_main]
+
+# Uzupełnienie pustych kolumn
+df.loc[df['Id_main'] == id_main, 'input'] = selected_record[column_name].values[0]
+df.loc[df['Id_main'] == id_main, 'output'] = selected_record[column_name.replace('input', 'output')].values[0]
+
+print(df)
