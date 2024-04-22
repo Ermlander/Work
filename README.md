@@ -602,3 +602,22 @@ def fill_data(row):
 
 # Uzupełnienie danych w ramce danych 'data'
 df = df.apply(fill_data, axis=1)
+
+
+################################
+
+
+
+def fill_output(row):
+    id_main = row['Id_main']
+    match_no = row['Match No']
+    id_step = row['Id_step']
+    column_name = f"{id_step.split()[0]} {id_step.split()[1]} output"
+    # Wybór rekordu na podstawie Id_main i Match No
+    selected_record = df2.loc[(df2['Id_main'] == id_main) & (df2['Match No'] == match_no)]
+    # Uzupełnienie kolumny 'Output'
+    row['Output'] = selected_record[column_name].values[0] if not selected_record.empty else ''
+    return row
+
+# Uzupełnienie danych w ramce danych 'data' dla kolumny "Output"
+df = df.apply(fill_output, axis=1)
