@@ -626,3 +626,18 @@ df = df.apply(fill_output, axis=1)
 ################
 
 column_name = f"{parts[0]} {parts[-2]} {parts[-1]} Output"
+
+
+
+def is_vessel(text):
+    keywords = [
+        'Crude Oil Tanker', 'LPG Tanker', 'Shuttle Tanker', 'Chemical/Products Tanker',
+        'DWT', 'GRT', 'flag', 'IMO', 'MMSI',
+        'None Identified flag', 'Iran flag', 'Mongolia flag', 'Panama flag',
+        'Additional Sanctions Information—Subject to Secondary Sanctions',
+        'Linked To:'
+    ]
+    for keyword in keywords:
+        if re.search(keyword, text):
+            return True
+    return False
