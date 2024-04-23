@@ -641,3 +641,36 @@ def is_vessel(text):
         if re.search(keyword, text):
             return True
     return False
+
+
+
+
+def extract_keywords(text):
+    # Define a regular expression pattern to match words
+    pattern = r'\b\w+\b'
+    # Find all words in the text using the regular expression pattern
+    words = re.findall(pattern, text)
+    # Filter out words with length less than 3 characters
+    keywords = [word for word in words if len(word) > 2]
+    # Convert keywords to lowercase to standardize them
+    keywords = [word.lower() for word in keywords]
+    # Remove duplicates
+    unique_keywords = list(set(keywords))
+    return unique_keywords
+
+# Example DataFrame
+data = {
+    'text_column': [
+        "NAINITAL (f.k.a. MIDSEA; f.k.a. MOTION; f.k.a. NAJM) (T2DR4) Crude Oil Tanker 298,731DWT 156,809GRT None Identified flag; Former Vessel Flag Malta; alt. Former Vessel Flag Tuvalu; alt. Former Vessel Flag Tanzania; Additional Sanctions Information—Subject to Secondary Sanctions; Vessel Registration Identification IMO 9079092; MMSI 572442210 (vessel) [IRAN] (Linked To: NATIONAL IRANIAN TANKER COMPANY).",
+        "NYOS (f.k.a. BRAWNY; f.k.a. MARIGOLD; f.k.a. NABI) (T2DS4) Crude Oil Tanker 298,731DWT 156,809GRT None Identified flag; Former Vessel Flag Malta; alt. Former Vessel Flag Tuvalu; alt. Former Vessel Flag Tanzania; Additional Sanctions Information—Subject to Secondary Sanctions; Vessel Registration Identification IMO 9079080; MMSI 572443210 (vessel) [IRAN] (Linked To: NATIONAL IRANIAN TANKER COMPANY).",
+        "SANCHI (f.k.a. GARDENIA; f.k.a. SEAHORSE; f.k.a. SEPID) (T2EF4) Crude Oil Tanker 164,154DWT 85,462GRT None Identified flag; Former Vessel Flag Malta; alt. Former Vessel Flag Tuvalu; alt. Former Vessel Flag Tanzania; Additional Sanctions Information—Subject to Secondary Sanctions; Vessel Registration Identification IMO 9356608; MMSI 572455210 (vessel) [IRAN] (Linked To: NATIONAL IRANIAN TANKER COMPANY).",
+        # Add more texts here...
+    ]
+}
+
+df = pd.DataFrame(data)
+
+# Apply the extract_keywords function to each row in the DataFrame and save the result in a new column
+df['keywords'] = df['text_column'].apply(extract_keywords)
+
+print(df)
