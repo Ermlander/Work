@@ -674,3 +674,37 @@ df = pd.DataFrame(data)
 df['keywords'] = df['text_column'].apply(extract_keywords)
 
 print(df)
+
+
+
+
+import re
+
+def categorize_text(text):
+    categories = {
+        'Entity': ['Corporation', 'Company', 'Organization', 'Firm', 'Enterprise'],
+        'Individual': ['Person', 'Individual', 'Human', 'Citizen'],
+        'Location/Place': ['Country', 'City', 'Town', 'State', 'Region', 'Location', 'Place'],
+        'Vessel': ['Crude Oil Tanker', 'LPG Tanker', 'Shuttle Tanker', 'Chemical/Products Tanker', 'DWT', 'GRT', 'flag', 'IMO', 'MMSI', 'None Identified flag', 'Iran flag', 'Mongolia flag', 'Panama flag', 'Additional Sanctions Information—Subject to Secondary Sanctions', 'Linked To:']
+    }
+    
+    # Initialize counts for each category
+    category_counts = {category: 0 for category in categories}
+    
+    # Count the number of keywords in each category found in the text
+    for category, keywords in categories.items():
+        for keyword in keywords:
+            if re.search(keyword, text):
+                category_counts[category] += 1
+    
+    # Determine the category with the most keywords found
+    max_category = max(category_counts, key=category_counts.get)
+    
+    return max_category
+
+# Example text
+example_text = "NAINITAL (f.k.a. MIDSEA; f.k.a. MOTION; f.k.a. NAJM) (T2DR4) Crude Oil Tanker 298,731DWT 156,809GRT None Identified flag; Former Vessel Flag Malta; alt. Former Vessel Flag Tuvalu; alt. Former Vessel Flag Tanzania; Additional Sanctions Information—Subject to Secondary Sanctions; Vessel Registration Identification IMO 9079092; MMSI 572442210 (vessel) [IRAN] (Linked To: NATIONAL IRANIAN TANKER COMPANY)."
+
+# Categorize the example text
+result_category = categorize_text(example_text)
+print("Result Category:", result_category)
