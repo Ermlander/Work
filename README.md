@@ -1049,3 +1049,49 @@ example_text = "NAINITAL (f.k.a. MIDSEA; f.k.a. MOTION; f.k.a. NAJM) (T2DR4) Cru
 result_category = categorize_text(example_text)
 print("Result Category:", result_category)
 
+
+
+#######################
+
+
+
+def categorize_text(text):
+    categories = {
+        'Entity': {
+            'keywords': ['Corporation', 'Company', 'Organization', 'Firm', 'Enterprise'],
+            'points': 1
+        },
+        'Individual': {
+            'keywords': ['Person', 'Individual', 'Human', 'Citizen', 'Type - I', 'Type:I'],
+            'points': [1, 2, 1, 1, 5, 5]
+        },
+        'Location/Place': {
+            'keywords': ['Country', 'City', 'Town', 'State', 'Region', 'Location', 'Place', 'this is location'],
+            'points': 1
+        },
+        'Vessel': {
+            'keywords': ['Crude Oil Tanker', 'LPG Tanker', 'Shuttle Tanker', 'Chemical/Products Tanker', 'DWT', 'GRT', 'flag', 'IMO', 'MMSI', 'None Identified flag', 'Iran flag', 'Mongolia flag', 'Panama flag', 'Additional Sanctions Information—Subject to Secondary Sanctions', 'Linked To:'],
+            'points': 1
+        }
+    }
+    
+    # Initialize points for each category
+    category_points = {category: 0 for category in categories}
+    
+    # Accumulate points for each category found in the text
+    for category, info in categories.items():
+        for keyword, points in zip(info['keywords'], info['points']):
+            # If points is a list, use it, otherwise use the provided integer value
+            points = points if isinstance(points, list) else [points] * len(info['keywords'])
+            if re.search(keyword, text):
+                category_points[category] += sum(points)
+    
+    # Find the category with the maximum points
+    max_category = max(category_points, key=category_points.get)
+    
+    # Check if there is a draw
+    if sum(category_points.values()) > category_points[max_category]:
+        return "Cannot determine"
+    
+    return max_category
+
