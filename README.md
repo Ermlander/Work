@@ -708,3 +708,68 @@ example_text = "NAINITAL (f.k.a. MIDSEA; f.k.a. MOTION; f.k.a. NAJM) (T2DR4) Cru
 # Categorize the example text
 result_category = categorize_text(example_text)
 print("Result Category:", result_category)
+
+
+
+##############################
+
+
+
+import re
+
+def categorize_text(text):
+    categories = {
+        'Entity': {
+            'keywords': ['Corporation', 'Company', 'Organization', 'Firm', 'Enterprise'],
+            'points': 1
+        },
+        'Individual': {
+            'keywords': ['Person', 'Individual', 'Human', 'Citizen', 'Type - I', 'Type:I'],
+            'points': 5
+        },
+        'Location/Place': {
+            'keywords': ['Country', 'City', 'Town', 'State', 'Region', 'Location', 'Place', 'this is location'],
+            'points': 1
+        },
+        'Vessel': {
+            'keywords': ['Crude Oil Tanker', 'LPG Tanker', 'Shuttle Tanker', 'Chemical/Products Tanker', 'DWT', 'GRT', 'flag', 'IMO', 'MMSI', 'None Identified flag', 'Iran flag', 'Mongolia flag', 'Panama flag', 'Additional Sanctions Information—Subject to Secondary Sanctions', 'Linked To:'],
+            'points': 1
+        }
+    }
+    
+    # Initialize counts and points for each category
+    category_info = {category: {'count': 0, 'points': 0} for category in categories}
+    
+    # Count the number of keywords and accumulate points in each category found in the text
+    for category, info in categories.items():
+        for keyword in info['keywords']:
+            if re.search(keyword, text):
+                category_info[category]['count'] += 1
+                category_info[category]['points'] += info['points']
+    
+    # Filter categories with at least two keywords found
+    eligible_categories = {category: info for category, info in category_info.items() if info['count'] >= 2}
+    
+    # If no category has at least two keywords found, return "Cannot determine"
+    if not eligible_categories:
+        return "Cannot determine"
+    
+    # Find the category with the maximum points
+    max_category = max(eligible_categories, key=lambda k: eligible_categories[k]['points'])
+    
+    # Check if there is a draw
+    if sum(info['points'] for info in eligible_categories.values()) > eligible_categories[max_category]['points']:
+        return "Cannot determine"
+    
+    return max_category
+
+# Example text
+example_text = "NAINITAL (f.k.a. MIDSEA; f.k.a. MOTION; f.k.a. NAJM) (T2DR4) Crude Oil Tanker 298,731DWT 156,809GRT None Identified flag; Former Vessel Flag Malta; alt. Former Vessel Flag Tuvalu; alt. Former Vessel Flag Tanzania; Additional Sanctions Information—Subject to Secondary Sanctions; Vessel Registration Identification IMO 9079092; MMSI 572442210 (vessel) [IRAN] (Linked To: NATIONAL IRANIAN TANKER COMPANY)."
+
+# Categorize the example text
+result_category = categorize_text(example_text)
+print("Result Category:", result_category)
+
+
+
+
