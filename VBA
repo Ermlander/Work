@@ -1,0 +1,18 @@
+ Dim i As Integer
+    Dim selectedItems As String
+    
+    ' Loop through each selected item in the listbox
+    For i = 0 To Me.ListBoxName.ListCount - 1
+        ' Check if the item is selected
+        If Me.ListBoxName.Selected(i) Then
+            ' Append the selected item to the list of selected items
+            selectedItems = selectedItems & Me.ListBoxName.Column(0, i) & vbCrLf
+        End If
+    Next i
+    
+    ' Display the selected items
+    If Len(selectedItems) > 0 Then
+        MsgBox "Selected Item(s):" & vbCrLf & selectedItems
+    Else
+        MsgBox "No items selected."
+    End If
