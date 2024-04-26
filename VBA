@@ -16,3 +16,40 @@
     Else
         MsgBox "No items selected."
     End If
+
+
+
+
+    Dim i As Integer
+    Dim selectedItems As String
+    Dim selectedItemsDict As Object
+    Set selectedItemsDict = CreateObject("Scripting.Dictionary")
+    
+    ' Loop through each selected item in the listbox
+    For i = 0 To Me.ListBoxName.ListCount - 1
+        ' Check if the item is selected
+        If Me.ListBoxName.Selected(i) Then
+            ' Get the selected item
+            selectedItem = Me.ListBoxName.Column(0, i)
+            ' Check if the item is not already in the dictionary
+            If Not selectedItemsDict.exists(selectedItem) Then
+                ' Append the selected item to the list of selected items
+                selectedItems = selectedItems & selectedItem & ", " ' Change the delimiter to comma
+                ' Add the item to the dictionary
+                selectedItemsDict.Add selectedItem, Nothing
+            End If
+        End If
+    Next i
+    
+    ' Remove the trailing comma and space if selected items are present
+    If Len(selectedItems) > 0 Then
+        selectedItems = Left(selectedItems, Len(selectedItems) - 2)
+    End If
+    
+    ' Display the selected items or a message if no items are selected
+    If Len(selectedItems) > 0 Then
+        MsgBox "Selected Item(s): " & selectedItems
+    Else
+        MsgBox "No items selected."
+    End If
+End Sub
