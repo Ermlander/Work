@@ -53,3 +53,55 @@
         MsgBox "No items selected."
     End If
 End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Dim i As Integer
+    Dim selectedItemsList As New Collection
+    Dim distinctItemsDict As Object
+    Set distinctItemsDict = CreateObject("Scripting.Dictionary")
+    Dim selectedItem As String
+    
+    ' Loop through each selected item in the listbox and populate the selectedItemsList
+    For i = 0 To Me.ListBoxName.ListCount - 1
+        ' Check if the item is selected
+        If Me.ListBoxName.Selected(i) Then
+            ' Get the selected item
+            selectedItem = Me.ListBoxName.Column(0, i)
+            ' Add the item to the selectedItemsList
+            selectedItemsList.Add selectedItem
+        End If
+    Next i
+    
+    ' Loop through each item in the selectedItemsList and populate the distinctItemsDict
+    For i = 1 To selectedItemsList.Count
+        ' Add the item to the distinctItemsDict (dictionary ensures only unique values)
+        If Not distinctItemsDict.exists(selectedItemsList(i)) Then
+            distinctItemsDict.Add selectedItemsList(i), Nothing
+        End If
+    Next i
+    
+    ' Construct the final result by joining the keys of the distinctItemsDict
+    Dim finalResult As String
+    finalResult = Join(distinctItemsDict.keys, ", ")
+    
+    ' Display the final result or a message if no items are selected
+    If Len(finalResult) > 0 Then
+        MsgBox "Selected Distinct Item(s): " & finalResult
+    Else
+        MsgBox "No items selected."
+    End If
