@@ -105,3 +105,33 @@ End Sub
     Else
         MsgBox "No items selected."
     End If
+
+
+
+Option Compare Database
+Option Explicit
+
+Dim StartTime As Date
+Dim IsTimerRunning As Boolean
+
+Private Sub Form_Load()
+    IsTimerRunning = False
+    Me.TextBox1 = "00:00:00" ' Inicjalizacja pola tekstowego z czasem
+End Sub
+
+Private Sub btnStart_Click()
+    If Not IsTimerRunning Then
+        StartTime = Now ' Zapisuje czas rozpoczęcia
+        IsTimerRunning = True
+        Me.TimerInterval = 1000 ' Ustawia interwał timera na 1 sekundę
+        Me.btnPause.Enabled = True ' Włącza przycisk pauzy
+        Me.btnStop.Enabled = True ' Włącza przycisk stopu
+    End If
+End Sub
+
+Private Sub btnPause_Click()
+    If IsTimerRunning Then
+        IsTimerRunning = False
+        Me.TimerInterval = 0 ' Wyłącza timer
+    End If
+End Sub
