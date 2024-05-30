@@ -1195,3 +1195,48 @@ def check_default_signature():
 
 # Execute the function to check default signatures
 check_default_signature()
+
+
+
+
+
+#########################
+
+import win32com.client
+import winreg as reg
+
+def get_default_signature_name():
+    # Initialize Outlook application
+    outlook = win32com.client.Dispatch("Outlook.Application")
+    namespace = outlook.GetNamespace("MAPI")
+
+    # Get the current Outlook profile
+    profile = namespace.CurrentProfileName
+
+    # Access registry settings for Outlook signatures
+    signature_key_path = r"Software\Microsoft\Office\16.0\Outlook\Profiles\{}\\0a0d020000000000c000000000000046".format(profile)
+
+    # Define keys for mail and reply/forward signatures
+    new_message_signature_key = "New Signature"
+
+    try:
+        # Open the registry key where Outlook signatures are stored
+        key = reg.OpenKey(reg.HKEY_CURRENT_USER, signature_key_path, 0, reg.KEY_READ)
+
+        # Check the value of the new message signature key
+        try:
+            new_message_signature, reg_type = reg.QueryValueEx(key, new_message_signature_key)
+            if new_message_signature:
+                print(f"Default signature for new messages: {new_message_signature}")
+            else:
+                print("No default signature set for new messages")
+        except FileNotFoundError:
+            print("No default signature set for new messages")
+
+        reg.CloseKey(key)
+
+    except Exception as e:
+        print(f"Failed to check default signatures: {e}")
+
+# Execute the function to check the default signature name for new messages
+get_default_signature_name()
