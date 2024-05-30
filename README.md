@@ -1143,3 +1143,55 @@ subject = "Test Email"
 body = "This is a test email sent from a shared mailbox."
 recipient = "recipient@example.com"
 send_email_from_shared_mailbox(shared_mailbox, subject, body, recipient)
+
+
+#########################
+
+
+import win32com.client
+import winreg as reg
+
+def check_default_signature():
+    # Initialize Outlook application
+    outlook = win32com.client.Dispatch("Outlook.Application")
+    namespace = outlook.GetNamespace("MAPI")
+
+    # Get the current Outlook profile
+    profile = namespace.CurrentProfileName
+
+    # Access registry settings for Outlook signatures
+    signature_key_path = r"Software\Microsoft\Office\16.0\Outlook\Profiles\{}\\0a0d020000000000c000000000000046".format(profile)
+
+    # Define keys for mail and reply/forward signatures
+    signature_keys = [
+        "New Signature",
+        "Reply-Forward Signature"
+    ]
+
+    try:
+        # Open the registry key where Outlook signatures are stored
+        key = reg.OpenKey(reg.HKEY_CURRENT_USER, signature_key_path, 0, reg.KEY_READ)
+
+        # Check the value of the signature keys
+        signatures = {}
+        for signature_key in signature_keys:
+            try:
+                value, reg_type = reg.QueryValueEx(key, signature_key)
+                signatures[signature_key] = value if value else "None"
+            except FileNotFoundError:
+                signatures[signature_key] = "None"
+
+        reg.CloseKey(key)
+
+        # Output the signature settings
+        for key, value in signatures.items():
+            if value == "None":
+                print(f"{key} is set to None")
+            else:
+                print(f"{key} is set to {value}")
+
+    except Exception as e:
+        print(f"Failed to check default signatures: {e}")
+
+# Execute the function to check default signatures
+check_default_signature()
