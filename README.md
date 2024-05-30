@@ -1076,6 +1076,7 @@ def categorize_text(text):
     }
     
     # Initialize points for each category
+    
     category_points = {category: 0 for category in categories}
     
     # Accumulate points for each category found in the text
@@ -1095,3 +1096,50 @@ def categorize_text(text):
     
     return max_category
 
+
+
+
+
+
+########################
+
+
+
+
+import win32com.client
+
+# Initialize Outlook application
+outlook = win32com.client.Dispatch("Outlook.Application")
+namespace = outlook.GetNamespace("MAPI")
+
+# Function to check mailboxes you can send from
+def check_send_as_permissions():
+    print("Checking mailboxes you can send from:")
+    accounts = namespace.Accounts
+    for account in accounts:
+        print(f"Account: {account.DisplayName}")
+
+# Function to send an email from a shared mailbox
+def send_email_from_shared_mailbox(shared_mailbox, subject, body, recipient):
+    try:
+        # Create a new mail item
+        mail = outlook.CreateItem(0)
+        # Set the sender to the shared mailbox
+        mail._oleobj_.Invoke(*(64209, 0, 8, 0, namespace.CreateRecipient(shared_mailbox)))
+        mail.Subject = subject
+        mail.Body = body
+        mail.To = recipient
+        mail.Send()
+        print(f"Email sent from {shared_mailbox}")
+    except Exception as e:
+        print(f"Failed to send email from {shared_mailbox}: {e}")
+
+# Check the mailboxes you can send from
+check_send_as_permissions()
+
+# Send an email from the shared mailbox
+shared_mailbox = "shared@example.com"
+subject = "Test Email"
+body = "This is a test email sent from a shared mailbox."
+recipient = "recipient@example.com"
+send_email_from_shared_mailbox(shared_mailbox, subject, body, recipient)
