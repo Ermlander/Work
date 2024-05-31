@@ -216,7 +216,7 @@ html_body = str(soup)
 send_email(subject, html_body, recipients)
 
 
-
+    signature_key_path = r"Software\Microsoft\Office\Outlook\Profiles\{}\\9375CFF0413111d3B88A00104B2A6676".format(profile)
 
 
 #################3
