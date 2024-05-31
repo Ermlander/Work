@@ -1240,3 +1240,8 @@ def get_default_signature_name():
 
 # Execute the function to check the default signature name for new messages
 get_default_signature_name()
+
+
+
+
+    signature_key_path = r"Software\Microsoft\Office\Outlook\Profiles\{}\\9375CFF0413111d3B88A00104B2A6676".format(profile)
