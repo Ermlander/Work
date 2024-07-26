@@ -1245,3 +1245,36 @@ get_default_signature_name()
 
 
     signature_key_path = r"Software\Microsoft\Office\Outlook\Profiles\{}\\9375CFF0413111d3B88A00104B2A6676".format(profile)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    // Funkcja, która zostanie wywołana po załadowaniu strony
+    function disableFields() {
+        // Przykład: Zablokuj pole o nazwie 'Title'
+        var fieldToDisable = 'Title'; // Zastąp nazwą wewnętrzną kolumny, którą chcesz zablokować
+
+        // Znajdź pole i zablokuj jego edycję
+        var field = document.querySelector("[title='" + fieldToDisable + "']");
+        if (field) {
+            field.disabled = true;
+            field.style.backgroundColor = "#e0e0e0"; // Opcjonalnie, zmień tło na szare
+        }
+    }
+
+    // Wywołaj funkcję po załadowaniu całego dokumentu
+    document.addEventListener("DOMContentLoaded", disableFields);
+</script>
